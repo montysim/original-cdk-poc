@@ -193,7 +193,7 @@ export class EcsCdkStack extends cdk.Stack {
       actionName: 'github_source',
       owner: githubUserName.valueAsString,
       repo: githubRepository.valueAsString,
-      branch: 'main',
+      branch: 'master',
       oauthToken: cdk.SecretValue.unsafePlainText(githubPersonalTokenSecret.valueAsString),
       output: sourceOutput
     });
