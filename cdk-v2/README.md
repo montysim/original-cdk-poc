@@ -14,6 +14,8 @@ The recommended approach is to [use Cloud9](#GiveMeALink) you can also use your
 own Linux based env easily with this guide.
 
 
+
+
 Launch a `t2.micro` [Cloud9 us-east-1](https://us-east-1.console.aws.amazon.com/codesuite/codepipeline/pipelines) terminal and prepare it with following commands:
 
 ```bash

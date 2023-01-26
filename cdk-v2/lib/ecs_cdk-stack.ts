@@ -21,14 +21,13 @@ export class EcsCdkStack extends cdk.Stack {
     const githubRepository = new cdk.CfnParameter(this, "githubRespository", {
         type: "String",
         description: "Github source code repository",
-        default: "amazon-ecs-fargate-cdk-v2-cicd" 
+        default: "original-cdk-poc" 
     })
 
-    const githubPersonalTokenSecretName = new cdk.CfnParameter(this, "githubPersonalTokenSecretName", {
-        type: "String",
-        description: "The name of the AWS Secrets Manager Secret which holds the GitHub Personal Access Token for this project.",
-        default: "/aws-samples/amazon-ecs-fargate-cdk-v2-cicd/github/personal_access_token" 
-    })
+    const githubPersonalTokenSecret = new cdk.CfnParameter(this, "githubPersonalTokenSecret", {
+      type: "String",
+      description: "GitHub Personal Access Token for this project.",
+  })
     //default: `${this.stackName}`
 
     const ecrRepo = new ecr.Repository(this, 'ecrRepo');
@@ -190,13 +189,12 @@ export class EcsCdkStack extends cdk.Stack {
 
     const sourceOutput = new codepipeline.Artifact();
     const buildOutput = new codepipeline.Artifact();
-    const nameOfGithubPersonTokenParameterAsString = githubPersonalTokenSecretName.valueAsString
     const sourceAction = new codepipeline_actions.GitHubSourceAction({
       actionName: 'github_source',
       owner: githubUserName.valueAsString,
       repo: githubRepository.valueAsString,
       branch: 'main',
-      oauthToken: cdk.SecretValue.secretsManager(nameOfGithubPersonTokenParameterAsString),
+      oauthToken: cdk.SecretValue.unsafePlainText(githubPersonalTokenSecret.valueAsString),
       output: sourceOutput
     });
 
