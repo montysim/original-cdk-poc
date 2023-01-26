@@ -90,7 +90,7 @@ export class EcsCdkStack extends cdk.Stack {
     });
 
     container.addPortMappings({
-      containerPort: 80,
+      containerPort: 8001,
       protocol: ecs.Protocol.TCP
     });
 
