@@ -121,7 +121,7 @@ export class EcsCdkStack extends cdk.Stack {
       repo: githubRepository.valueAsString,
       webhook: true, // optional, default: true if `webhookfilteres` were provided, false otherwise
       webhookFilters: [
-        codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs('main'),
+        codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs('master'),
       ], // optional, by default all pushes and pull requests will trigger a build
     });
 
