@@ -109,7 +109,7 @@ export class EcsCdkStack extends cdk.Stack {
     const fargateService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "ecs-service", {
       cluster: cluster,
       taskDefinition: taskDef,
-      publicLoadBalancer: true,
+      publicLoadBalancer: false,
       desiredCount: 1,
       listenerPort: 80
     });
