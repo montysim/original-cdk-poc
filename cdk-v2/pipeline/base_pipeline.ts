@@ -93,7 +93,7 @@ class CfnCCPOCBaseImagePipeline extends Stack {
 
         // Build
         const project = new codebuild.PipelineProject(this, 'BuildBaseImage', {
-            buildSpec: codebuild.BuildSpec.fromSourceFilename('flast-docker-app/base/base_buildspec.yml'),
+            buildSpec: codebuild.BuildSpec.fromSourceFilename('flask-docker-app/base/base_buildspec.yml'),
             environment: {
                 buildImage: codebuild.LinuxBuildImage.AMAZON_LINUX_2_2,
                 privileged: true
