@@ -30,16 +30,28 @@ export class EcsCdkStack extends cdk.Stack {
   })
     //default: `${this.stackName}`
 
-    const ecrRepo = new ecr.Repository(this, 'ecrRepo');
-
-    /**
-     * create a new vpc with single nat gateway
-     */
-    const vpc = new ec2.Vpc(this, 'ecs-cdk-vpc', {
-      cidr: '10.0.0.0/16',
-      natGateways: 1,
-      maxAzs: 3  /* does a sample need 3 az's? */
+    const ecrRepo = new ecr.Repository(this, `EcrRepo`, {
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      repositoryName: 'ecr_repo_test'
     });
+    console.log(`ECR Repo URI: ${ecrRepo.repositoryUri}`)
+
+    const vpc = ec2.Vpc.fromLookup(this, `VPC`, {
+      vpcId: 'vpc-00734a9f1fb874cfa'
+    })
+    console.log(`VPC_LOOKUP: ${ vpc ? 'success' : 'failed' }`)
+
+    // const vpc = new ec2.Vpc(this, `${config.stackPrefix}-VPC`, {
+    //   cidr: '10.21.0.0/16',
+    //   natGateways: 1,
+    //   maxAzs: 3  /* does a sample need 3 az's? */
+    // });
+
+
+    // TODO: Check found count AZ/Subnets == 2
+    console.log(`\nAVAILABILITY ZONES: ${vpc.availabilityZones.length}`)
+    console.log(`\nPUBLIC SUBNETS: ${vpc.publicSubnets.length}`)
+    console.log(`\nPRIVATE SUBNETS: ${vpc.privateSubnets.length}`)
 
     const clusteradmin = new iam.Role(this, 'adminrole', {
       assumedBy: new iam.AccountRootPrincipal()
@@ -111,10 +123,6 @@ export class EcsCdkStack extends cdk.Stack {
       scaleInCooldown: cdk.Duration.seconds(60),
       scaleOutCooldown: cdk.Duration.seconds(60)
     });
-
-
-
-
 
     const gitHubSource = codebuild.Source.gitHub({
       owner: githubUserName.valueAsString,
@@ -205,9 +213,9 @@ export class EcsCdkStack extends cdk.Stack {
       outputs: [buildOutput], // optional
     });
 
-    const manualApprovalAction = new codepipeline_actions.ManualApprovalAction({
-      actionName: 'approve',
-    });
+    // const manualApprovalAction = new codepipeline_actions.ManualApprovalAction({
+    //   actionName: 'approve',
+    // });
 
     const deployAction = new codepipeline_actions.EcsDeployAction({
       actionName: 'deployAction',
@@ -231,10 +239,10 @@ export class EcsCdkStack extends cdk.Stack {
           stageName: 'build',
           actions: [buildAction],
         },
-        {
-          stageName: 'approve',
-          actions: [manualApprovalAction],
-        },
+        // {
+        //   stageName: 'approve',
+        //   actions: [manualApprovalAction],
+        // },
         {
           stageName: 'deploy-to-ecs',
           actions: [deployAction],
