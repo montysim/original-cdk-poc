@@ -13,7 +13,7 @@ phases:
       - wget https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh
       - bash install.sh
       - export NVM_DIR="$HOME/.nvm"
-      - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      - '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
       - nvm install v18
       - apt-get install -y jq
       - npm install -g npm@latest
