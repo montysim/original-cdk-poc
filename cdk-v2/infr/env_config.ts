@@ -16,6 +16,8 @@ export const ecrBaseRepoName = 'cfn-cc-poc-repo-base'
 
 export const constructPrefix = 'cfn-cc-poc'
 
+export const dockerAppPort = 8001
+
 const env = process.env.DEPLOY_ENV || 'sandbox'
 
 export const deployEnvConfig: { [index: string]: any;} = {

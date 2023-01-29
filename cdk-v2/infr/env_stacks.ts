@@ -7,15 +7,14 @@ import {
   aws_ecs_patterns as patterns,
   aws_iam as iam,
 } from 'aws-cdk-lib';
-import {
-    appName,
-    deployEnvConfig as config
-} from './env_config';
+import * as config from './env_config';
 
 interface VSLFargateStackProps extends StackProps {
   vpcId: string;
   ecrName: string;
   serviceName: string;
+  stackPrefix: string;
+  dockerAppPort: number;
 }
 
 class VSLFargateStack extends Stack {
@@ -34,7 +33,7 @@ class VSLFargateStack extends Stack {
     });
 
     const logging = new ecs.AwsLogDriver({
-      streamPrefix: `${config.stackPrefix}-logs`
+      streamPrefix: `${props.stackPrefix}-logs`
     });
 
     // TODO: Try task definition instead?
@@ -43,7 +42,7 @@ class VSLFargateStack extends Stack {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com')
     });
 
-    const taskDef = new ecs.FargateTaskDefinition(this, `${config.stackPrefix}-EcsTaskdef`, {
+    const taskDef = new ecs.FargateTaskDefinition(this, `${props.stackPrefix}-EcsTaskdef`, {
       taskRole: taskrole,
     });
 
@@ -74,7 +73,7 @@ class VSLFargateStack extends Stack {
     });
 
     container.addPortMappings({
-      containerPort: config.dockerAppPort,
+      containerPort: props.dockerAppPort,
       protocol: ecs.Protocol.TCP
     });
 
@@ -93,23 +92,27 @@ class VSLFargateStack extends Stack {
 
 const app = new App();
 // Sandbox Main Stack
-new VSLFargateStack(app, config['sandbox'].stackName, {
-    vpcId: config['sandbox'].vpcId,
-    serviceName: config['sandbox'].stackName + 'Fargate',
-    ecrName: config.ecrBaseName,
-    env: config['sandbox'].env,
+new VSLFargateStack(app, config.deployEnvConfig['sandbox'].stackName, {
+    vpcId: config.deployEnvConfig['sandbox'].vpcId,
+    serviceName: config.deployEnvConfig['sandbox'].stackName + 'Fargate',
+    ecrName: config.ecrBaseRepoName,
+    stackPrefix: config.deployEnvConfig['sandbox'].stackName,
+    dockerAppPort: config.dockerAppPort,
+    env: config.deployEnvConfig['sandbox'].env,
     tags: {
-       project: appName
+       project: config.appName
     }
 });
 // Dev Main Stack
-new VSLFargateStack(app, config['dev'].stackName, {
-    vpcId: config['dev'].vpcId,
-    serviceName: config['dev'].stackName + 'Fargate',
-    ecrName: config.ecrBaseName,
-    env: config['dev'].env,
+new VSLFargateStack(app, config.deployEnvConfig['dev'].stackName, {
+    vpcId: config.deployEnvConfig['dev'].vpcId,
+    serviceName: config.deployEnvConfig['dev'].stackName + 'Fargate',
+    ecrName: config.ecrBaseRepoName,
+    stackPrefix: config.deployEnvConfig['dev'].stackName,
+    dockerAppPort: config.dockerAppPort,
+    env: config.deployEnvConfig['dev'].env,
     tags: {
-        project: appName
+        project: config.appName
     }
 });
 
