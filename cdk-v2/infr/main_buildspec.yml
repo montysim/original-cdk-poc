@@ -10,8 +10,8 @@ phases:
       nodejs: latest
     commands:
       # Install nvm, node18, CDK & jq, upgrade npm
-      - curl --silent --location https://rpm.nodesource.com/setup_16.x | bash -
-      - yum -y install nodejs
+      # - curl --silent --location https://rpm.nodesource.com/setup_16.x | bash -
+      # - yum -y install nodejs
       - yum install -y jq
       - npm install -g npm@latest
       - npm install -g aws-cdk
