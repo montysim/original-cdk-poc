@@ -26,6 +26,7 @@ class VSLFargateStack extends Stack {
     })
     console.log(`VPC_LOOKUP: ${ vpc ? 'success' : 'failed' }`)
 
+    // TODO: Unique name or lookup
     const cluster = new ecs.Cluster(this, "Cluster", {
         vpc: vpc,
         // TODO: Update name to env specific
@@ -95,7 +96,7 @@ const app = new App();
 new VSLFargateStack(app, config.deployEnvConfig['sandbox'].stackName, {
     vpcId: config.deployEnvConfig['sandbox'].vpcId,
     serviceName: config.deployEnvConfig['sandbox'].stackName + 'Fargate',
-    ecrName: config.ecrBaseRepoName,
+    ecrName: config.ecrRepoName,
     stackPrefix: config.deployEnvConfig['sandbox'].stackName,
     dockerAppPort: config.dockerAppPort,
     env: config.deployEnvConfig['sandbox'].env,
@@ -107,7 +108,7 @@ new VSLFargateStack(app, config.deployEnvConfig['sandbox'].stackName, {
 new VSLFargateStack(app, config.deployEnvConfig['dev'].stackName, {
     vpcId: config.deployEnvConfig['dev'].vpcId,
     serviceName: config.deployEnvConfig['dev'].stackName + 'Fargate',
-    ecrName: config.ecrBaseRepoName,
+    ecrName: config.ecrRepoName,
     stackPrefix: config.deployEnvConfig['dev'].stackName,
     dockerAppPort: config.dockerAppPort,
     env: config.deployEnvConfig['dev'].env,
