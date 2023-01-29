@@ -137,7 +137,7 @@ export class CCPOCApiCfnPipeline extends Construct {
                 stageName: envStack.name,
                 actions: [
                     new actions.CloudFormationCreateReplaceChangeSetAction({
-                        actionName: 'PrepareChangesTest',
+                        actionName: `PrepareChanges${envStack.name}`,
                         stackName: envStack.stackName,
                         changeSetName,
                         runOrder: 1,
@@ -145,7 +145,7 @@ export class CCPOCApiCfnPipeline extends Construct {
                         templatePath: buildArtifact.atPath(envStack.stackName + '.template.json'),
                     }),
                     new actions.CloudFormationExecuteChangeSetAction({
-                        actionName: 'ExecuteChangesTest',
+                        actionName: `ExecuteChanges${envStack.name}`,
                         stackName: envStack.stackName,
                         changeSetName,
                         runOrder: 2
