@@ -189,7 +189,7 @@ class CfnCCPOCPipelineStack extends Stack {
             new CCPOCApiCfnPipeline(this, 'Pipeline', {
                 githubUserName: 'montysim',
                 githubRepository: 'original-cdk-poc',
-                githubPersonalTokenSecret: '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',
+                githubPersonalTokenSecret: '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',
                 mainName: config.appName,
                 stackNamePrefix: config.appName,
                 uniqueEnvs: Object.values(config.deployEnvConfig),
