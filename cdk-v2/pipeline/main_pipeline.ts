@@ -30,38 +30,20 @@ export class CCPOCApiCfnPipeline extends Construct {
     constructor(parent: Construct, name: string, props: CCPOCApiCfnPipelineProps) {
         super(parent, name);
 
-        // new notifications.CfnNotificationRule(this, 'PipelineNotifications', {
-        //     name: pipeline.pipelineName,
-        //     detailType: 'FULL',
-        //     resource: pipeline.pipelineArn,
-        //     eventTypeIds: [ 'codepipeline-pipeline-pipeline-execution-failed' ],
-        //     targets: [
-        //         {
-        //             targetType: 'SNS',
-        //             targetAddress: Stack.of(this).formatArn({
-        //                 service: 'sns',
-        //                 resource: 'reinvent-trivia-notifications'
-        //             }),
-        //         }
-        //     ]
-        // });
-
-        
-
         const changeSetName = 'StagedChangeSet';
 
         const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
             pipelineName: props.mainName,
         });
       
-        const gitHubSource = codebuild.Source.gitHub({
-            owner: props.githubUserName,
-            repo: props.githubRepository,
-            webhook: true, // optional, default: true if `webhookfilteres` were provided, false otherwise
-            webhookFilters: [
-                // codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs('master'),
-            ], // optional, by default all pushes and pull requests will trigger a build
-        });
+        // const gitHubSource = codebuild.Source.gitHub({
+        //     owner: props.githubUserName,
+        //     repo: props.githubRepository,
+        //     webhook: true, // optional, default: true if `webhookfilteres` were provided, false otherwise
+        //     webhookFilters: [
+        //         // codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs('master'),
+        //     ], // optional, by default all pushes and pull requests will trigger a build
+        // });
 
         // Source
         const sourceOutput = new codepipeline.Artifact();
@@ -184,12 +166,23 @@ export class CCPOCApiCfnPipeline extends Construct {
 class CfnCCPOCPipelineStack extends Stack {
     constructor(parent: App, name: string, props?: StackProps) {
         super(parent, name, props);
+
+        const githubUserName = new CfnParameter(this, "githubUserName", {
+            type: "String",
+            description: "Github username for source code repository"
+        })
+    
+        const githubPersonalTokenSecret = new CfnParameter(this, "githubPersonalTokenSecret", {
+            type: "String",
+            description: "GitHub Personal Access Token for this project.",
+        })
+
         // TODO: Update for each region only
         // config.bootstrapEnvs.forEach((env) => {
             new CCPOCApiCfnPipeline(this, 'Pipeline', {
-                githubUserName: 'montysim',
+                githubUserName: githubUserName.valueAsString,
                 githubRepository: 'original-cdk-poc',
-                githubPersonalTokenSecret: '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',
+                githubPersonalTokenSecret: githubPersonalTokenSecret.valueAsString,
                 mainName: config.appName,
                 stackNamePrefix: config.appName,
                 uniqueEnvs: Object.values(config.deployEnvConfig),
