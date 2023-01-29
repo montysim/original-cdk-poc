@@ -32,6 +32,8 @@ class VSLFargateStack extends Stack {
         clusterName: 'CCPOCApiCluster'
     });
 
+    // TODO: Try task definition instead?
+
     // Configuration parameters
     const imageRepo = ecr.Repository.fromRepositoryName(this, 'RepoLookup', props.ecrName);
 
@@ -55,7 +57,7 @@ const app = new App();
 new VSLFargateStack(app, config['sandbox'].stackName, {
     vpcId: config['sandbox'].vpcId,
     serviceName: config['sandbox'].stackName + 'Fargate',
-    ecrName: config.ecrRepoName,
+    ecrName: config.ecrBaseName,
     env: config['sandbox'].env,
     tags: {
        project: appName
@@ -65,7 +67,7 @@ new VSLFargateStack(app, config['sandbox'].stackName, {
 new VSLFargateStack(app, config['dev'].stackName, {
     vpcId: config['dev'].vpcId,
     serviceName: config['dev'].stackName + 'Fargate',
-    ecrName: config.ecrRepoName,
+    ecrName: config.ecrBaseName,
     env: config['dev'].env,
     tags: {
         project: appName

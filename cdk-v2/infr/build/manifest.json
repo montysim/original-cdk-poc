@@ -1,0 +1,337 @@
+{
+  "version": "20.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "CfnCCPOCSandbox.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CfnCCPOCSandbox.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CfnCCPOCSandbox": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://281115773576/us-west-1",
+      "properties": {
+        "templateFile": "CfnCCPOCSandbox.template.json",
+        "tags": {
+          "project": "CfnCCPOC"
+        },
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::281115773576:role/cdk-hnb659fds-deploy-role-281115773576-us-west-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::281115773576:role/cdk-hnb659fds-cfn-exec-role-281115773576-us-west-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-281115773576-us-west-1/dd9982e57d73ece441bd1f33fc0aa18f8ddd3c03e512d565268a0675e34c7e65.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CfnCCPOCSandbox.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::281115773576:role/cdk-hnb659fds-lookup-role-281115773576-us-west-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CfnCCPOCSandbox.assets"
+      ],
+      "metadata": {
+        "/CfnCCPOCSandbox": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "project",
+                "Value": "CfnCCPOC"
+              }
+            ]
+          }
+        ],
+        "/CfnCCPOCSandbox/Cluster/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ClusterEB0386A7"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/LB/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLBB353E155"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/LB/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLBSecurityGroup5F444C78"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/LB/SecurityGroup/to CfnCCPOCSandboxFargateServiceSecurityGroupA6AD023D:80": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLBSecurityGrouptoCfnCCPOCSandboxFargateServiceSecurityGroupA6AD023D80ABA3426F"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/LB/PublicListener/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLBPublicListener4B4929CA"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/LB/PublicListener/ECSGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLBPublicListenerECSGroupBE57E081"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/LoadBalancerDNS": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLoadBalancerDNS9433D5F6"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/ServiceURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceServiceURL47701F45"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/TaskDef/TaskRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceTaskDefTaskRole8CDCF85E"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/TaskDef/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceTaskDef940E3A80"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/TaskDef/web/LogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceTaskDefwebLogGroup71FAF541"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/TaskDef/ExecutionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceTaskDefExecutionRole9194820E"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/TaskDef/ExecutionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceTaskDefExecutionRoleDefaultPolicy827E7CA2"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/Service/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceECC8084D"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/Service/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceSecurityGroup262B61DD"
+          }
+        ],
+        "/CfnCCPOCSandbox/FargateService/Service/SecurityGroup/from CfnCCPOCSandboxFargateServiceLBSecurityGroup7C83375C:80": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceSecurityGroupfromCfnCCPOCSandboxFargateServiceLBSecurityGroup7C83375C80C1D3C32F"
+          }
+        ],
+        "/CfnCCPOCSandbox/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CfnCCPOCSandbox/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CfnCCPOCSandbox/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CfnCCPOCSandbox"
+    },
+    "CfnCCPOCDev.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CfnCCPOCDev.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CfnCCPOCDev": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://281115773576/us-west-1",
+      "properties": {
+        "templateFile": "CfnCCPOCDev.template.json",
+        "tags": {
+          "project": "CfnCCPOC"
+        },
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::281115773576:role/cdk-hnb659fds-deploy-role-281115773576-us-west-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::281115773576:role/cdk-hnb659fds-cfn-exec-role-281115773576-us-west-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-281115773576-us-west-1/d78ec525bf92270865343712c3a020edc08a74fe1082420c6e9b73becf5b8679.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CfnCCPOCDev.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::281115773576:role/cdk-hnb659fds-lookup-role-281115773576-us-west-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CfnCCPOCDev.assets"
+      ],
+      "metadata": {
+        "/CfnCCPOCDev": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "project",
+                "Value": "CfnCCPOC"
+              }
+            ]
+          }
+        ],
+        "/CfnCCPOCDev/Cluster/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ClusterEB0386A7"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/LB/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLBB353E155"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/LB/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLBSecurityGroup5F444C78"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/LB/SecurityGroup/to CfnCCPOCDevFargateServiceSecurityGroupFDE43D33:80": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLBSecurityGrouptoCfnCCPOCDevFargateServiceSecurityGroupFDE43D33803F0904B2"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/LB/PublicListener/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLBPublicListener4B4929CA"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/LB/PublicListener/ECSGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLBPublicListenerECSGroupBE57E081"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/LoadBalancerDNS": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceLoadBalancerDNS9433D5F6"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/ServiceURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceServiceURL47701F45"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/TaskDef/TaskRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceTaskDefTaskRole8CDCF85E"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/TaskDef/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceTaskDef940E3A80"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/TaskDef/web/LogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceTaskDefwebLogGroup71FAF541"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/TaskDef/ExecutionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceTaskDefExecutionRole9194820E"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/TaskDef/ExecutionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceTaskDefExecutionRoleDefaultPolicy827E7CA2"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/Service/Service": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceECC8084D"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/Service/SecurityGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceSecurityGroup262B61DD"
+          }
+        ],
+        "/CfnCCPOCDev/FargateService/Service/SecurityGroup/from CfnCCPOCDevFargateServiceLBSecurityGroupA8269478:80": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FargateServiceSecurityGroupfromCfnCCPOCDevFargateServiceLBSecurityGroupA826947880572AB91A"
+          }
+        ],
+        "/CfnCCPOCDev/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CfnCCPOCDev/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CfnCCPOCDev/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CfnCCPOCDev"
+    }
+  }
+}

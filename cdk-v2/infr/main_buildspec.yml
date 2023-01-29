@@ -9,8 +9,12 @@ phases:
     runtime-versions:
       nodejs: latest
     commands:
-      # Install CDK & jq, upgrade npm
-      - yum install -y jq
+      # Install nvm, node18, CDK & jq, upgrade npm
+      - wget https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh
+      - bash install.sh
+      - source ~/.bashrc
+      - nvm install v18
+      - apt-get install -y jq
       - npm install -g npm@latest
       - npm install -g aws-cdk
 

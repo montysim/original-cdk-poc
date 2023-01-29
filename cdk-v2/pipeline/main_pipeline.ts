@@ -12,6 +12,9 @@ import {
 import * as config from '../infr/env_config';
 
 export interface CCPOCApiCfnPipelineProps {
+    githubUserName: string,
+    githubRepository: string,
+    githubPersonalTokenSecret: string,
     mainName: string,
     stackNamePrefix: string;
     uniqueEnvs: any[]; // .name
@@ -26,10 +29,6 @@ export interface CCPOCApiCfnPipelineProps {
 export class CCPOCApiCfnPipeline extends Construct {
     constructor(parent: Construct, name: string, props: CCPOCApiCfnPipelineProps) {
         super(parent, name);
-
-        const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
-            pipelineName: props.mainName,
-        });
 
         // new notifications.CfnNotificationRule(this, 'PipelineNotifications', {
         //     name: pipeline.pipelineName,
@@ -47,29 +46,17 @@ export class CCPOCApiCfnPipeline extends Construct {
         //     ]
         // });
 
-    
+        
+
         const changeSetName = 'StagedChangeSet';
 
-        const githubUserName = new CfnParameter(this, "githubUserName", {
-            type: "String",
-            description: "Github username for source code repository"
-        })
-    
-        const githubRepository = new CfnParameter(this, "githubRespository", {
-            type: "String",
-            description: "Github source code repository",
-            default: "original-cdk-poc" 
-        })
-    
-        const githubPersonalTokenSecret = new CfnParameter(this, "githubPersonalTokenSecret", {
-          type: "String",
-          description: "GitHub Personal Access Token for this project.",
-        })
-
+        const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
+            pipelineName: props.mainName,
+        });
       
         const gitHubSource = codebuild.Source.gitHub({
-            owner: githubUserName.valueAsString,
-            repo: githubRepository.valueAsString,
+            owner: props.githubUserName,
+            repo: props.githubRepository,
             webhook: true, // optional, default: true if `webhookfilteres` were provided, false otherwise
             webhookFilters: [
                 // codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs('master'),
@@ -80,17 +67,12 @@ export class CCPOCApiCfnPipeline extends Construct {
         const sourceOutput = new codepipeline.Artifact();
         const sourceAction = new actions.GitHubSourceAction({
             actionName: 'github_source',
-            owner: githubUserName.valueAsString,
-            repo: githubRepository.valueAsString,
+            owner: props.githubUserName,
+            repo: props.githubRepository,
             branch: 'master',
-            oauthToken: SecretValue.unsafePlainText(githubPersonalTokenSecret.valueAsString),
+            oauthToken: SecretValue.unsafePlainText(props.githubPersonalTokenSecret),
             output: sourceOutput,
             trigger: actions.GitHubTrigger.WEBHOOK
-        });
-
-        pipeline.addStage({
-            stageName: 'Source',
-            actions: [sourceAction],
         });
 
         // Source
@@ -112,7 +94,8 @@ export class CCPOCApiCfnPipeline extends Construct {
         const buildProject = new codebuild.PipelineProject(this, 'BuildProject', {
             buildSpec: codebuild.BuildSpec.fromSourceFilename(props.mainBuildSpecPath),
             environment: {
-              buildImage: codebuild.LinuxBuildImage.AMAZON_LINUX_2_2,
+            // STANDARD_6_0 := 'aws/codebuild/standard:6.0' Ubuntu:22
+              buildImage: codebuild.LinuxBuildImage.STANDARD_6_0,
               environmentVariables: {
                 'ARTIFACTS_BUCKET': {
                     value: pipeline.artifactBucket.bucketName
@@ -166,7 +149,7 @@ export class CCPOCApiCfnPipeline extends Construct {
 
         props.uniqueEnvs.forEach((envStack: any) => {
             pipeline.addStage({
-                stageName: 'Approval ' + envStack.name,
+                stageName: 'Approval' + envStack.name,
                 actions: [manualApprovalAction]
             });
             pipeline.addStage({
@@ -201,24 +184,30 @@ export class CCPOCApiCfnPipeline extends Construct {
 class CfnCCPOCPipelineStack extends Stack {
     constructor(parent: App, name: string, props?: StackProps) {
         super(parent, name, props);
-
-        new CCPOCApiCfnPipeline(this, 'Pipeline', {
-            mainName: config.appName,
-            stackNamePrefix: config.appName,
-            uniqueEnvs: Object.values(config.deployEnvConfig),
-            ecrBaseName: config.ecrBaseRepoName,
-            mainBuildSpecPath: 'cdk-v2/infr/main_buildspec.yml'
-        });
+        // TODO: Update for each region only
+        // config.bootstrapEnvs.forEach((env) => {
+            new CCPOCApiCfnPipeline(this, 'Pipeline', {
+                githubUserName: 'montysim',
+                githubRepository: 'original-cdk-poc',
+                githubPersonalTokenSecret: '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',
+                mainName: config.appName,
+                stackNamePrefix: config.appName,
+                uniqueEnvs: Object.values(config.deployEnvConfig),
+                ecrBaseName: config.ecrBaseRepoName,
+                mainBuildSpecPath: 'cdk-v2/infr/main_buildspec.yml'
+            });
+        // });
     }
 }
 
 const app = new App();
-config.bootstrapEnvs.forEach((env) => {
-    new CfnCCPOCPipelineStack(app, 'CfnCCPOCPipelineStack', {
-        env: env,
-        tags: {
-            project: config.appName
-        }
-    });
-})
+
+new CfnCCPOCPipelineStack(app, 'CfnCCPOCPipelineStack', {
+    // TODO: Update this to be generic
+    env: config.deployEnvConfig['sandbox'].env,
+    tags: {
+        project: config.appName
+    }
+});
+
 app.synth();
