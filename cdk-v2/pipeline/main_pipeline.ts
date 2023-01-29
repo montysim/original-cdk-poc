@@ -76,8 +76,7 @@ export class CCPOCApiCfnPipeline extends Construct {
         const buildProject = new codebuild.PipelineProject(this, 'BuildProject', {
             buildSpec: codebuild.BuildSpec.fromSourceFilename(props.mainBuildSpecPath),
             environment: {
-            // STANDARD_6_0 := 'aws/codebuild/standard:6.0' Ubuntu:22
-              buildImage: codebuild.LinuxBuildImage.STANDARD_6_0,
+              buildImage: codebuild.LinuxBuildImage.AMAZON_LINUX_2_2,
               environmentVariables: {
                 'ARTIFACTS_BUCKET': {
                     value: pipeline.artifactBucket.bucketName
