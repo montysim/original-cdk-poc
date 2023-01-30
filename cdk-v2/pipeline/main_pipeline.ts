@@ -122,11 +122,11 @@ export class CfnStackCICDPipeline extends Construct {
 
         props.uniqueEnvs.forEach((envStack: any) => {
             pipeline.addStage({
-                stageName: `Approval: ${envStack.name} Stack Creation`,
+                stageName: `Approval_${envStack.name}-StackCreation`,
                 actions: [manualApprovalAction]
             });
             pipeline.addStage({
-                stageName: `${envStack.name} Stack Creation`,
+                stageName: `${envStack.name}-StackCreation`,
                 actions: [
                     new actions.CloudFormationCreateReplaceChangeSetAction({
                         actionName: `PrepareChanges${envStack.name}`,
