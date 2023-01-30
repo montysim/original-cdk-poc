@@ -30,12 +30,6 @@ class CCPOCAppBoostrapStack extends Stack {
         removalPolicy: RemovalPolicy.DESTROY,
         repositoryName: config.ecrRepoName
     });
-
-    const cluster = new ecs.Cluster(this, "Cluster", {
-        vpc: vpc,
-        // TODO: Update name to env specific
-        clusterName: `${config.appName}Cluster`
-    });
 }}
 
 const app = new App();

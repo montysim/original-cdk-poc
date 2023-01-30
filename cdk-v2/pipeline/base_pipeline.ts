@@ -34,6 +34,7 @@ class CfnCCPOCBaseImagePipeline extends Stack {
 
         const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
             pipelineName: `${props.prefix}-base-image`,
+            artifactBucket: foundBucket
         });
 
         // new notifications.CfnNotificationRule(this, 'PipelineNotifications', {

@@ -16,7 +16,7 @@ export const ecrBaseRepoName = 'cfn-cc-poc-repo-base'
 
 export const vpcId = 'vpc-00734a9f1fb874cfa'
 export const bucketName = 'cc-poc-artifacts'
-export const clusterArn = ''
+export const clusterArn = 'arn:aws:ecs:us-west-1:281115773576:cluster/CfnCCPOCCluster'
 
 export const constructPrefix = 'cfn-cc-poc'
 

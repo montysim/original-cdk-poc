@@ -38,6 +38,7 @@ export class CfnStackCICDPipeline extends Construct {
         const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
             artifactBucket: foundBucket,
             pipelineName: props.pipelineName,
+            // TODO: restartExecutionOnUpdate: true
         });
     
 
