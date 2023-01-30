@@ -16,6 +16,8 @@ export const ecrBaseRepoName = 'cfn-cc-poc-repo-base'
 
 export const constructPrefix = 'cfn-cc-poc'
 
+export const mainBuildSpecPath = 'cdk-v2/infr/main_buildspec.yml'
+
 export const dockerAppPort = 8001
 
 const env = process.env.DEPLOY_ENV || 'sandbox'

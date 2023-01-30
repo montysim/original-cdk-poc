@@ -11,11 +11,12 @@ import {
 } from 'aws-cdk-lib';
 import * as config from '../infr/env_config';
 
-export interface CCPOCApiCfnPipelineProps {
+export interface CfnStackCICDPipelineProps {
     githubUserName: string,
     githubRepository: string,
     githubPersonalTokenSecret: string,
-    mainName: string,
+    appName: string,
+    pipelineName: string,
     stackNamePrefix: string;
     uniqueEnvs: any[]; // .name
     ecrBaseName: string;
@@ -26,24 +27,15 @@ export interface CCPOCApiCfnPipelineProps {
  * A common class for a pipeline that builds a container image and deploys it using a CloudFormation template.
  * [Sources: GitHub source, ECR base image] -> [CodeBuild build] -> [CloudFormation Deploy Actions to 'test' stack] -> [CloudFormation Deploy Actions to 'prod' stack]
  */
-export class CCPOCApiCfnPipeline extends Construct {
-    constructor(parent: Construct, name: string, props: CCPOCApiCfnPipelineProps) {
+export class CfnStackCICDPipeline extends Construct {
+    constructor(parent: Construct, name: string, props: CfnStackCICDPipelineProps) {
         super(parent, name);
 
-        const changeSetName = 'StagedChangeSet';
-
         const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
-            pipelineName: props.mainName,
+            // TODO: Use same artifactBucket
+            pipelineName: props.pipelineName,
         });
-      
-        // const gitHubSource = codebuild.Source.gitHub({
-        //     owner: props.githubUserName,
-        //     repo: props.githubRepository,
-        //     webhook: true, // optional, default: true if `webhookfilteres` were provided, false otherwise
-        //     webhookFilters: [
-        //         // codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs('master'),
-        //     ], // optional, by default all pushes and pull requests will trigger a build
-        // });
+    
 
         // Source
         const sourceOutput = new codepipeline.Artifact();
@@ -130,16 +122,16 @@ export class CCPOCApiCfnPipeline extends Construct {
 
         props.uniqueEnvs.forEach((envStack: any) => {
             pipeline.addStage({
-                stageName: 'Approval' + envStack.name,
+                stageName: `Approval: ${envStack.name} Stack Creation`,
                 actions: [manualApprovalAction]
             });
             pipeline.addStage({
-                stageName: envStack.name,
+                stageName: `${envStack.name} Stack Creation`,
                 actions: [
                     new actions.CloudFormationCreateReplaceChangeSetAction({
                         actionName: `PrepareChanges${envStack.name}`,
                         stackName: envStack.stackName,
-                        changeSetName,
+                        changeSetName: `${envStack.name}-StagedChangeSet`,
                         runOrder: 1,
                         adminPermissions: true,
                         templatePath: buildArtifact.atPath(envStack.stackName + '.template.json'),
@@ -147,7 +139,7 @@ export class CCPOCApiCfnPipeline extends Construct {
                     new actions.CloudFormationExecuteChangeSetAction({
                         actionName: `ExecuteChanges${envStack.name}`,
                         stackName: envStack.stackName,
-                        changeSetName,
+                        changeSetName: `${envStack.name}-StagedChangeSet`,
                         runOrder: 2
                     })
                 ],
@@ -162,7 +154,7 @@ export class CCPOCApiCfnPipeline extends Construct {
  * Pipeline that builds a container image and deploys it to ECS using CloudFormation and ECS rolling update deployments.
  * [Sources: GitHub source, ECR base image] -> [CodeBuild build] -> [CloudFormation Deploy Actions to 'test' stack] -> [CloudFormation Deploy Actions to 'prod' stack]
  */
-class CfnCCPOCPipelineStack extends Stack {
+class CCPOCMainImageCICDPipeline extends Stack {
     constructor(parent: App, name: string, props?: StackProps) {
         super(parent, name, props);
 
@@ -178,23 +170,23 @@ class CfnCCPOCPipelineStack extends Stack {
 
         // TODO: Update for each region only
         // config.bootstrapEnvs.forEach((env) => {
-            new CCPOCApiCfnPipeline(this, 'Pipeline', {
+            new CfnStackCICDPipeline(this, 'Pipeline', {
                 githubUserName: githubUserName.valueAsString,
                 githubRepository: 'original-cdk-poc',
                 githubPersonalTokenSecret: githubPersonalTokenSecret.valueAsString,
-                mainName: config.appName,
+                appName: config.appName,
+                pipelineName: config.constructPrefix + '-main-image',
                 stackNamePrefix: config.appName,
                 uniqueEnvs: Object.values(config.deployEnvConfig),
                 ecrBaseName: config.ecrBaseRepoName,
-                mainBuildSpecPath: 'cdk-v2/infr/main_buildspec.yml'
+                mainBuildSpecPath: config.mainBuildSpecPath
             });
         // });
     }
 }
 
 const app = new App();
-
-new CfnCCPOCPipelineStack(app, 'CfnCCPOCPipelineStack', {
+new CCPOCMainImageCICDPipeline(app, 'CCPOC-MainImageCICDPipeline', {
     // TODO: Update this to be generic
     env: config.deployEnvConfig['sandbox'].env,
     tags: {
