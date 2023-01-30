@@ -14,6 +14,10 @@ export const ecrRepoName = 'cfn-cc-poc-repo-main'
 // this must match base_buildspec.yml:IMAGE_REPO_NAME
 export const ecrBaseRepoName = 'cfn-cc-poc-repo-base'
 
+export const vpcId = 'vpc-00734a9f1fb874cfa'
+export const bucketName = 'cc-poc-artifacts'
+export const clusterArn = ''
+
 export const constructPrefix = 'cfn-cc-poc'
 
 export const mainBuildSpecPath = 'cdk-v2/infr/main_buildspec.yml'

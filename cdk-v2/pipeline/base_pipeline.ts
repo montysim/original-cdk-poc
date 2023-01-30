@@ -14,6 +14,7 @@ import {
     aws_codestarnotifications as notifications,
     aws_codepipeline_actions as actions,
     aws_iam as iam,
+    aws_s3 as s3,
 } from 'aws-cdk-lib';
 import * as config from '../infr/env_config';
 
@@ -28,6 +29,8 @@ interface CfnCCPOCBaseImagePipelineStackProps extends StackProps {
 class CfnCCPOCBaseImagePipeline extends Stack {
     constructor(parent: App, name: string, props: CfnCCPOCBaseImagePipelineStackProps) {
         super(parent, name, props);
+
+        const foundBucket = s3.Bucket.fromBucketName(this, 'ArtifactBucket', config.bucketName);
 
         const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
             pipelineName: `${props.prefix}-base-image`,

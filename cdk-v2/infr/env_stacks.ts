@@ -15,6 +15,7 @@ interface VSLFargateStackProps extends StackProps {
   serviceName: string;
   stackPrefix: string;
   dockerAppPort: number;
+  clusterArn: string;
 }
 
 class VSLFargateStack extends Stack {
@@ -26,12 +27,8 @@ class VSLFargateStack extends Stack {
     })
     console.log(`VPC_LOOKUP: ${ vpc ? 'success' : 'failed' }`)
 
-    // TODO: Unique name or lookup
-    const cluster = new ecs.Cluster(this, "Cluster", {
-        vpc: vpc,
-        // TODO: Update name to env specific
-        clusterName: 'CCPOCApiCluster'
-    });
+    const cluster = ecs.Cluster.fromClusterArn(this, 'Cluster', props.clusterArn)
+    console.log(`CLUSTER_LOOKUP: ${ cluster ? 'success' : 'failed' }`)
 
     const logging = new ecs.AwsLogDriver({
       streamPrefix: `${props.stackPrefix}-logs`
@@ -99,6 +96,7 @@ new VSLFargateStack(app, config.deployEnvConfig['sandbox'].stackName, {
     ecrName: config.ecrRepoName,
     stackPrefix: config.deployEnvConfig['sandbox'].stackName,
     dockerAppPort: config.dockerAppPort,
+    clusterArn: config.clusterArn,
     env: config.deployEnvConfig['sandbox'].env,
     tags: {
        project: config.appName
@@ -111,6 +109,7 @@ new VSLFargateStack(app, config.deployEnvConfig['dev'].stackName, {
     ecrName: config.ecrRepoName,
     stackPrefix: config.deployEnvConfig['dev'].stackName,
     dockerAppPort: config.dockerAppPort,
+    clusterArn: config.clusterArn,
     env: config.deployEnvConfig['dev'].env,
     tags: {
         project: config.appName

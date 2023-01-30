@@ -8,6 +8,7 @@ import {
     aws_codepipeline_actions as actions,
     aws_ecr as ecr,
     aws_iam as iam,
+    aws_s3 as s3,
 } from 'aws-cdk-lib';
 import * as config from '../infr/env_config';
 
@@ -16,6 +17,7 @@ export interface CfnStackCICDPipelineProps {
     githubRepository: string,
     githubPersonalTokenSecret: string,
     appName: string,
+    bucketName: string,
     pipelineName: string,
     stackNamePrefix: string;
     uniqueEnvs: any[]; // .name
@@ -31,8 +33,10 @@ export class CfnStackCICDPipeline extends Construct {
     constructor(parent: Construct, name: string, props: CfnStackCICDPipelineProps) {
         super(parent, name);
 
+        const foundBucket = s3.Bucket.fromBucketName(this, 'ArtifactBucket', props.bucketName);
+
         const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
-            // TODO: Use same artifactBucket
+            artifactBucket: foundBucket,
             pipelineName: props.pipelineName,
         });
     
@@ -175,6 +179,7 @@ class CCPOCMainImageCICDPipeline extends Stack {
                 githubRepository: 'original-cdk-poc',
                 githubPersonalTokenSecret: githubPersonalTokenSecret.valueAsString,
                 appName: config.appName,
+                bucketName: config.bucketName,
                 pipelineName: config.constructPrefix + '-main-image',
                 stackNamePrefix: config.appName,
                 uniqueEnvs: Object.values(config.deployEnvConfig),
