@@ -85,6 +85,7 @@ class VSLFargateStack extends Stack {
         desiredCount: 1,
         listenerPort: 80
     });
+  
     fargateService.targetGroup.setAttribute('deregistration_delay.timeout_seconds', '10');
   }
 }

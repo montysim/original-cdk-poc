@@ -37,21 +37,6 @@ class CfnCCPOCBaseImagePipeline extends Stack {
             artifactBucket: foundBucket
         });
 
-        // new notifications.CfnNotificationRule(this, 'PipelineNotifications', {
-        //     name: pipeline.pipelineName,
-        //     detailType: 'FULL',
-        //     resource: pipeline.pipelineArn,
-        //     eventTypeIds: [ 'codepipeline-pipeline-pipeline-execution-failed' ],
-        //     targets: [
-        //         {
-        //             targetType: 'SNS',
-        //             targetAddress: Stack.of(this).formatArn({
-        //                 service: 'sns',
-        //                 resource: 'reinvent-trivia-notifications'
-        //             }),
-        //         }
-        //     ]
-        // });
         const githubUserName = new CfnParameter(this, "githubUserName", {
             type: "String",
             description: "Github username for source code repository"

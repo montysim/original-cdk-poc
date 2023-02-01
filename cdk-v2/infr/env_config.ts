@@ -6,6 +6,7 @@ export const bootstrapEnvs: Environment[] = [
     // sandbox & dev
     { account: '281115773576', region: 'us-west-1'},
     // test & prod
+    { account: '281115773576', region: 'us-west-2'},
 ]
 // this must be lowercase
 // TODO: inject for yml to read?
